@@ -4,3 +4,11 @@ coverage/
 petey.pdf
 *.log
 .DS_Store
+
+# Python environment (for rembg script)
+.venv/
+__pycache__/
+
+# Environment variables
+.env
+.env.local
