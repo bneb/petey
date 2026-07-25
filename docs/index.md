@@ -17,6 +17,10 @@ I needed to feel something again. So I decided to build a weird offshoot project
 
 Welcome to **Adobe Acrobat as the IDE**.
 
+<div align="center">
+  <img src="demo.gif" alt="Petey in Action" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 20px 0; max-width: 100%;" />
+</div>
+
 As for the the turtle all up there? That’s our mascot, **Sweet Pete**. Don’t stare at him too long or he will run off with my Hyundai's only remaining key fob and hide behind the corner store.
 
 ## The Architecture of Sickness
