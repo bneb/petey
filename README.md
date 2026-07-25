@@ -8,6 +8,12 @@ Petey is a fully self-contained JavaScript IDE running entirely inside a standar
 
 ## Features
 
+<div align="center">
+  <img src="docs/still_1.png" alt="Petey UI Still 1" width="250" style="margin: 5px;" />
+  <img src="docs/still_2.png" alt="Petey UI Still 2" width="250" style="margin: 5px;" />
+  <img src="docs/still_3.png" alt="Petey UI Still 3" width="250" style="margin: 5px;" />
+</div>
+
 - **In-PDF Execution**: Write and run JavaScript entirely inside the PDF. No external dependencies or internet connection required for the core engine.
 - **Algorithm Library**: Comes with built-in LeetCode-style algorithms (Two Sum, Fibonacci, Reverse String) out of the box.
 - **Virtual File System (VFS)**: Securely create, edit, and save your own custom scripts within the PDF. The VFS bypasses strict Acrobat attachment security policies by persisting files into a hidden JSON text field.

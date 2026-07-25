@@ -38,6 +38,12 @@ Adobe’s strict sandbox wouldn't let us write files to disk. Did we fight it? N
 ### 3. The AcroForm UI
 There is no DOM. If you ask me about the DOM I will not be allowed to eat dessert 🏜️ tonight. Every visual element is almost certainly (probably) an absolute-positioned AcroForm widget drawn on a PDF canvas with my last bit of sanity and `pdf-lib`. 
 
+<div align="center">
+  <img src="still_1.png" alt="Petey UI Still 1" width="250" style="margin: 5px; border-radius: 4px;" />
+  <img src="still_2.png" alt="Petey UI Still 2" width="250" style="margin: 5px; border-radius: 4px;" />
+  <img src="still_3.png" alt="Petey UI Still 3" width="250" style="margin: 5px; border-radius: 4px;" />
+</div>
+
 ## Why?
 
 Because this is is obviously the future of software engineering.
