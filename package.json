@@ -1,0 +1,22 @@
+{
+  "name": "petey",
+  "version": "0.1.0",
+  "description": "A self-contained IDE inside a PDF",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "lint": "eslint src/ test/",
+    "build": "node src/generate.js",
+    "serve": "node src/thin-client/server.js"
+  },
+  "dependencies": {
+    "js-interpreter": "^6.0.2",
+    "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.39.1",
+    "vitest": "^3.2.4"
+  }
+}
