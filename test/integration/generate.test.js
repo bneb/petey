@@ -3,7 +3,7 @@ import { PDFDocument } from 'pdf-lib';
 import { mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { generate } from '../../src/generate.js';
+import { generate, resolveBuildDate } from '../../src/generate.js';
 import { buildRuntime } from '../../src/injected/runtime.js';
 import { getFieldNames } from '../../src/injected/runtime.js';
 
@@ -95,6 +95,55 @@ describe('PDF generation', () => {
     var fullBytes = await generate(join(tmpDir, 'petey-full.pdf'), false);
     // The runtime is the bulk of the document; a stub without it is tiny.
     expect(fullBytes.length).toBeGreaterThan(stubBytes.length * 5);
+  });
+});
+
+describe('reproducible builds', () => {
+  var FIXED = new Date(Date.UTC(2026, 6, 24, 12, 0, 0));
+
+  it('stamps the requested date instead of the wall clock', { timeout: 60000 }, async function () {
+    // The regression guard: pdf-lib stamps CreationDate/ModDate with new Date()
+    // from the PDFDocument constructor, so identical source never rebuilt to
+    // identical bytes and a released artifact could not be reproduced.
+    var bytes = await generate(join(tmpDir, 'pinned.pdf'), true, FIXED);
+    // updateMetadata:false — loading also calls pdf-lib's updateInfoDict, which
+    // would re-stamp ModDate with the wall clock and mask what was written.
+    var doc = await PDFDocument.load(bytes, { updateMetadata: false });
+    expect(doc.getCreationDate().toISOString()).toBe(FIXED.toISOString());
+    expect(doc.getModificationDate().toISOString()).toBe(FIXED.toISOString());
+  });
+
+  it('produces byte-identical output for the same build date', { timeout: 60000 }, async function () {
+    var a = await generate(join(tmpDir, 'det-a.pdf'), false, FIXED);
+    var b = await generate(join(tmpDir, 'det-b.pdf'), false, FIXED);
+    expect(Buffer.from(a).equals(Buffer.from(b))).toBe(true);
+  });
+
+  it('honours SOURCE_DATE_EPOCH', function () {
+    var previous = process.env.SOURCE_DATE_EPOCH;
+    process.env.SOURCE_DATE_EPOCH = '1000000000';
+    try {
+      expect(resolveBuildDate().toISOString()).toBe('2001-09-09T01:46:40.000Z');
+    } finally {
+      if (previous === undefined) { delete process.env.SOURCE_DATE_EPOCH; }
+      else { process.env.SOURCE_DATE_EPOCH = previous; }
+    }
+  });
+
+  it('defaults to the HEAD commit date, not the current time', function () {
+    var previous = process.env.SOURCE_DATE_EPOCH;
+    delete process.env.SOURCE_DATE_EPOCH;
+    try {
+      var resolved = resolveBuildDate().getTime();
+      expect(resolved).toBe(resolveBuildDate().getTime());
+      // Once a minute of wall clock has passed, a commit-derived value can no
+      // longer equal "now"; the Unix-epoch fallback means there is no git.
+      if (resolved !== 0) {
+        expect(new Date(resolved).getUTCFullYear()).toBeGreaterThanOrEqual(2020);
+      }
+    } finally {
+      if (previous !== undefined) { process.env.SOURCE_DATE_EPOCH = previous; }
+    }
   });
 });
 

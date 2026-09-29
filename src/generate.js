@@ -1,4 +1,7 @@
 import { writeFileSync } from 'fs';
+import { execFileSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import { PDFName, PDFBool, rgb } from 'pdf-lib';
 import { createDocument, addPage, setMetadata } from './pdf/document.js';
 import { embedMonospaceFont } from './pdf/fonts.js';
@@ -16,7 +19,63 @@ import {
   buildPdfAction,
 } from './ui/actions.js';
 
+var PROJECT_ROOT = dirname(fileURLToPath(import.meta.url));
 
+/**
+ * Reads SOURCE_DATE_EPOCH, the reproducible-builds convention.
+ * @returns {Date|null}
+ */
+function sourceDateEpoch() {
+  var raw = String(process.env.SOURCE_DATE_EPOCH || '').trim();
+  if (!/^\d+$/.test(raw)) { return null; }
+  return new Date(parseInt(raw, 10) * 1000);
+}
+
+/**
+ * Reads the committer timestamp of HEAD, which is fixed for a given commit.
+ * @returns {Date|null}
+ */
+function gitCommitDate() {
+  try {
+    var out = execFileSync('git', ['log', '-1', '--format=%ct'], {
+      cwd: PROJECT_ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    var epoch = parseInt(String(out).trim(), 10);
+    return isFinite(epoch) && epoch > 0 ? new Date(epoch * 1000) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Resolves the timestamp stamped into the generated PDF.
+ *
+ * pdf-lib stamps CreationDate and ModDate with the wall-clock time when the
+ * document is constructed (updateInfoDict, called from the PDFDocument
+ * constructor), so two builds of identical source never matched byte for byte.
+ * Pinning the timestamp to a commit-derived value makes releases reproducible:
+ * anyone who checks out the tag and rebuilds gets the same bytes.
+ *
+ * Order: SOURCE_DATE_EPOCH, then the HEAD commit date, then the Unix epoch so
+ * an export without git history still builds deterministically.
+ *
+ * @returns {Date}
+ */
+export function resolveBuildDate() {
+  return sourceDateEpoch() || gitCommitDate() || new Date(0);
+}
+
+/**
+ * Overrides pdf-lib's wall-clock CreationDate/ModDate with a fixed instant.
+ * @param {PDFDocument} doc
+ * @param {Date} date
+ */
+function pinBuildDate(doc, date) {
+  doc.setCreationDate(date);
+  doc.setModificationDate(date);
+}
 
 /**
  * Creates a standard text field for the code editor.
@@ -29,10 +88,14 @@ function createEditor(page, font, rect, defaultValue) {
 
 /**
  * Generates the complete Petey PDF and writes it to disk.
+ * @param {string} [outputPath] - defaults to petey.pdf in the CWD
+ * @param {boolean} [skipRuntime] - omit the injected runtime (structure tests)
+ * @param {Date} [buildDate] - timestamp to stamp; defaults to resolveBuildDate()
  */
-export async function generate(outputPath, skipRuntime = false) {
+export async function generate(outputPath, skipRuntime = false, buildDate = resolveBuildDate()) {
   var doc = await createDocument();
   setMetadata(doc, { title: 'Petey IDE', author: 'Petey', creator: 'petey (pdf-lib)' });
+  pinBuildDate(doc, buildDate);
   var page = addPage(doc, [PAGE_WIDTH, PAGE_HEIGHT]);
   var font = await embedMonospaceFont(doc);
   var layout = calculateLayout(PAGE_WIDTH, PAGE_HEIGHT);

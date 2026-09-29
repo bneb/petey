@@ -14,6 +14,7 @@ export default [
         process: 'readonly',
         console: 'readonly',
         TextEncoder: 'readonly',
+        Buffer: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly'
       }
