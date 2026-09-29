@@ -17,6 +17,14 @@ I needed to feel something again. So I decided to build a weird offshoot project
 
 Welcome to **Adobe Acrobat as the IDE**.
 
+## [Download petey.pdf](https://github.com/bneb/petey/releases/latest/download/petey.pdf)
+
+Then do the following, or nothing will happen:
+
+1. **Open it in desktop Adobe Acrobat or Acrobat Reader.** Not a browser PDF viewer, not macOS Preview, not your phone. Those render the page but cannot execute Acrobat JavaScript, so you will get a very handsome screenshot of an IDE that does nothing.
+2. **Let it run JavaScript.** If Acrobat asks whether to trust or run JavaScript in this document, say yes. If nothing executes, check that JavaScript is enabled under **Edit → Preferences → JavaScript** (Windows) or **Acrobat → Preferences → JavaScript** (macOS) — [Adobe's docs](https://helpx.adobe.com/acrobat/desktop/protect-documents/mitigate-security-risks/restrict-javascript-api.html) cover the setting.
+3. **Pick an algorithm from the file tree, edit it, hit Run.** Save writes your code into a hidden form field inside the PDF, because Adobe would not let us write to your disk and we are nothing if not adaptable.
+
 <div align="center">
   <img src="demo.gif" alt="Petey in Action" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 20px 0; max-width: 100%;" />
 </div>

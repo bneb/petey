@@ -6,6 +6,10 @@
 
 Petey is a fully self-contained JavaScript IDE running entirely inside a standard PDF document. It leverages Adobe Acrobat's native JavaScript engine combined with a bundled, sandboxed ES5 JS-Interpreter to execute code directly from within the PDF.
 
+## Try it
+
+[**Download petey.pdf**](https://github.com/bneb/petey/releases/latest/download/petey.pdf) and open it in **desktop Adobe Acrobat or Acrobat Reader** — not a browser viewer, not Preview, not a phone. Those cannot run Acrobat JavaScript, so the IDE will not respond. Allow JavaScript when prompted. ([Full instructions](https://bneb.github.io/petey/).)
+
 ## Features
 
 <div align="center">
