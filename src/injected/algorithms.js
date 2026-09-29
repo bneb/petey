@@ -62,7 +62,7 @@ export var algorithms = {
 export function getAlgorithmsCode() {
   var code = 'var _algorithms = {};\n';
   for (var key in algorithms) {
-    if (algorithms.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(algorithms, key)) {
       code += '_algorithms["' + key + '"] = decodeURIComponent("' + encodeURIComponent(algorithms[key]) + '");\n';
     }
   }

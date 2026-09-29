@@ -1,5 +1,4 @@
 import { getFieldNames } from '../injected/runtime.js';
-import { rgb } from 'pdf-lib';
 
 /**
  * Returns the configuration for the file tree list box.
@@ -26,7 +25,7 @@ export function fileTreeConfig(rect, items) {
       '      editor.value = " "; editor.value = _algorithms[event.value];',
       '    } else {',
       '      try {',
-      '        var vfsField = this.getField(names.vfs);',
+      '        var vfsField = this.getField("' + names.vfs + '");',
       '        if (vfsField && vfsField.value) {',
       '          var vfs = eval("(" + vfsField.value + ")");',
       '          var key = encodeURIComponent(event.value);',
@@ -57,7 +56,7 @@ export function fileTreeUpdateScript() {
     '    for (var key in _algorithms) { arr.push(key); }',
     '  }',
     '  try {',
-    '    var vfsField = _doc.getField(names.vfs);',
+    '    var vfsField = _doc.getField("' + names.vfs + '");',
     '    if (vfsField && vfsField.value) {',
     '      var vfs = eval("(" + vfsField.value + ")");',
     '      for (var k in vfs) { arr.push(decodeURIComponent(k)); }',

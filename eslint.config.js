@@ -37,12 +37,8 @@ export default [
   {
     // String generators and UI config objects legitimately exceed 15 lines
     files: [
-      'src/injected/demo.js',
       'src/injected/runtime.js',
-      'src/injected/selfbuild.js',
       'src/interpreter/adapter.js',
-      'src/interpreter/graphics.js',
-      'src/interpreter/html-engine.js',
       'src/thin-client/connector.js',
       'src/ui/actions.js',
       'src/ui/editor.js',
@@ -53,14 +49,5 @@ export default [
       'max-lines-per-function': 'off',
       'max-lines': 'off'
     }
-  },
-  {
-    // Injected PDF JS must be ES5 — allow var, no arrow functions, etc.
-    // NOTE: This applies to files that ARE injected, not the builder scripts.
-    files: ['src/injected/demo.js', 'src/injected/selfbuild.js'],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
-    },
   },
 ];

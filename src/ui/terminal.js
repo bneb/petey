@@ -1,5 +1,4 @@
 import { getFieldNames } from '../injected/runtime.js';
-import { rgb } from 'pdf-lib';
 
 /**
  * Returns the configuration for the terminal output text field.

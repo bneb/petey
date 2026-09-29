@@ -30,7 +30,7 @@ export function saveButtonAction() {
     '  return;',
     '}',
     'try {',
-    '  var vfsField = this.getField(names.vfs);',
+    '  var vfsField = this.getField("' + names.vfs + '");',
     '  var vfs = {};',
     '  if (vfsField && vfsField.value) { vfs = eval("(" + vfsField.value + ")"); }',
     '  var key = encodeURIComponent(filename);',
@@ -52,7 +52,7 @@ export function saveButtonAction() {
 }
 
 /**
- * Generates ES5 action code for the Clear button.
+ * Generates ES5 action code for the New button.
  * @returns {string}
  */
 export function newFileButtonAction() {
@@ -63,7 +63,7 @@ export function newFileButtonAction() {
     '});',
     'if (name) {',
     '  try {',
-    '    var vfsField = this.getField(names.vfs);',
+    '    var vfsField = this.getField("' + names.vfs + '");',
     '    var vfs = {};',
     '    if (vfsField && vfsField.value) { vfs = eval("(" + vfsField.value + ")"); }',
     '    var key = encodeURIComponent(name);',
@@ -77,9 +77,9 @@ export function newFileButtonAction() {
     '    str += "}";',
     '    if (vfsField) { vfsField.value = str; }',
     '    if (typeof refreshFileTree === "function") { refreshFileTree(); }',
-    '    var tree = this.getField(names.fileTree);',
+    '    var tree = this.getField("' + names.fileTree + '");',
     '    if (tree) { tree.value = name; }',
-    '    var editor = this.getField(names.editor);',
+    '    var editor = this.getField("' + names.editor + '");',
     '    if (editor) { editor.value = " "; editor.value = "// Write new code here...\\n"; }',
     '  } catch (e) {',
     '    app.alert("Error creating file: " + e);',
